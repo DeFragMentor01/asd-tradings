@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
 import { HiArrowRight } from 'react-icons/hi';
-import { FiPackage } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 
 const Hero = () => {
@@ -21,7 +20,7 @@ const Hero = () => {
       setCurrentPath((prev) => (prev + 1) % paths.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [paths.length]);
 
   return (
     <div id="hero" className="relative min-h-screen flex items-center overflow-hidden">
