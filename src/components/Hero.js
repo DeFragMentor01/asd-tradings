@@ -1,102 +1,97 @@
-import React from "react";
-import logoPng from "../assets/asd-image2.png";
-import screenImg from "../assets/factory-img.jpeg";
+import { motion } from 'framer-motion';
+import { Link } from 'react-scroll';
+import { HiArrowRight } from 'react-icons/hi';
 
 const Hero = () => {
   return (
-    <div
-      className="bg-gray-300 flex justify-center items-center"
-      style={{ minHeight: "calc(100vh - 4rem)" }}
-    >
-      <div className="w-full md:w-4/5 xl:w-3/5 mx-auto p-6 rounded-md max-w-5xl flex flex-wrap px-4 md:px-0">
-        <div className="w-full md:w-1/2 flex justify-center flex-col items-center pr-4">
-          <img
-            src={logoPng}
-            alt="Logo"
-            className="w-4/5 md:w-4/5 lg:w-4/5 mb-24 mt-0 md:mt-[-5rem]" // Increased the width slightly
-          />
-
-          <img
-            src={screenImg}
-            alt="Stock"
-            className="rounded-full w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 object-cover mt-8 md:mt-0" // Increased the top margin to create more space
-          />
-        </div>
-
-        <div className="w-full md:w-1/2 flex-grow flex flex-col justify-start md:pl-4 text-center md:text-center">
-          <h1
-            className="text-5xl md:text-7xl font-bold leading-tight"
-            style={{ color: "#1B1D51" }}
-          >
-            Hello,
-          </h1>
-          <h2
-            className="text-3xl md:text-4xl font-bold leading-tight"
-            style={{ color: "#1B1D51" }}
-          >
-            a bit about us
-          </h2>
-          <div className="flex justify-center mt-8">
-            <div className="flex justify-center items-center mx-4">
-              <div
-                className="w-12 md:w-24 h-12 md:h-24 rounded-full flex justify-center items-center"
-                style={{ backgroundColor: "#C82D4D" }}
-              >
-                <p className="text-white font-bold text-sm md:text-xl">BUY</p>
-              </div>
-            </div>
-            <div className="flex justify-center items-center mx-4">
-              <div
-                className="w-12 md:w-24 h-12 md:h-24 rounded-full flex justify-center items-center"
-                style={{ backgroundColor: "#C82D4D" }}
-              >
-                <p className="text-white font-bold text-sm md:text-xl">SELL</p>
-              </div>
-            </div>
-            <div className="flex justify-center items-center mx-4">
-              <div
-                className="w-12 md:w-24 h-12 md:h-24 rounded-full flex justify-center items-center"
-                style={{ backgroundColor: "#C82D4D" }}
-              >
-                <p className="text-white font-bold text-sm md:text-xl">TRADE</p>
-              </div>
-            </div>
-          </div>
-          <div
-            className="text-base md:text-md mt-6"
-            style={{ color: "#1B1D51" }}
-          >
-            <p className="mt-4">
-              Welcome to ASD Tradings, your global surplus inventory solutions
-              provider.
-            </p>
-            <p className="mt-4">
-              We specialize in seamlessly connecting surplus and excess stock
-              buyers and sellers across the world.
-            </p>
-            <p className="mt-4">
-              Our mission is simple: to create a dynamic marketplace where
-              excess products find new homes and businesses unlock hidden value.
-            </p>
-            <p className="mt-4">
-              At ASD Tradings, we understand the challenges that surplus
-              inventory can pose for businesses of all sizes.
-            </p>
-            <p className="mt-4">
-              We are committed to streamlining an efficient way to turn your
-              surplus goods into opportunities.
-            </p>
-            <p className="mt-4">
-              Whether you’re looking to clear out excess stock or find quality
-              products at unbeatable prices, we’re here to bridge the gap.
-            </p>
-            <p className="mt-4">
-              We’re always happy to chat, via Phone, Email, and LinkedIn –
-              Looking forward to connecting!😃
-            </p>
-          </div>
-        </div>
+    <div id="hero" className="relative min-h-screen flex items-center">
+      {/* Background with overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-[#2B2D61] to-[#1B1D51]">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
       </div>
+
+      {/* Content */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center sm:text-left"
+        >
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
+            Global Surplus Inventory
+            <br />
+            <span className="text-[#C82D4D]">Solutions Provider</span>
+          </h1>
+          
+          <p className="text-xl text-gray-200 mb-8 max-w-2xl">
+            Connecting businesses worldwide with premium surplus inventory solutions. 
+            We specialize in efficient distribution and strategic asset management.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center sm:justify-start">
+            <Link
+              to="services"
+              spy={true}
+              smooth={true}
+              offset={-70}
+              duration={500}
+              className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#C82D4D] hover:bg-[#C82D4D]/90 transition-colors duration-300"
+            >
+              Our Services
+              <HiArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+            
+            <Link
+              to="contact"
+              spy={true}
+              smooth={true}
+              offset={-70}
+              duration={500}
+              className="inline-flex items-center px-8 py-3 border-2 border-white text-base font-medium rounded-md text-white hover:bg-white hover:text-[#1B1D51] transition-colors duration-300"
+            >
+              Contact Us
+            </Link>
+          </div>
+
+          {/* Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="mt-16 grid grid-cols-2 gap-8 sm:grid-cols-4"
+          >
+            {[
+              { label: 'Global Partners', value: '50+' },
+              { label: 'Countries Served', value: '25+' },
+              { label: 'Years Experience', value: '15+' },
+              { label: 'Successful Deals', value: '1000+' },
+            ].map((stat, index) => (
+              <div key={index} className="text-center">
+                <p className="text-3xl font-bold text-white">{stat.value}</p>
+                <p className="text-sm text-gray-300">{stat.label}</p>
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        animate={{
+          y: [0, 10, 0],
+        }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+      >
+        <div className="w-6 h-10 border-2 border-white rounded-full p-1">
+          <div className="w-1.5 h-3 bg-white rounded-full mx-auto" />
+        </div>
+      </motion.div>
     </div>
   );
 };
