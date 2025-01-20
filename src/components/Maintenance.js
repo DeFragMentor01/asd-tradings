@@ -52,11 +52,23 @@ const Maintenance = () => {
             <h2 className="text-xl font-semibold text-[#1B1D51] mb-4">
               Need to reach us?
             </h2>
-            <p className="text-gray-600">
-              Email: contact@asdtradings.com
-              <br />
-              Phone: +1 (555) 123-4567
-            </p>
+            <div className="text-gray-600 space-y-2">
+              <p>
+                <span className="font-medium">Email:</span>
+                <br />
+                info@asdtradings.com
+              </p>
+              <p>
+                <span className="font-medium">Phone UK:</span>
+                <br />
+                0333 613 6700
+              </p>
+              <p>
+                <span className="font-medium">Phone US:</span>
+                <br />
+                +1 845-202-9691
+              </p>
+            </div>
           </div>
         </motion.div>
       </div>
