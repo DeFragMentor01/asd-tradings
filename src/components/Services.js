@@ -15,24 +15,9 @@ const Services = () => {
       description: 'Access our worldwide network of verified buyers and sellers for optimal trading opportunities.',
     },
     {
-      icon: HiOutlineCube,
-      title: 'Inventory Management',
-      description: 'Expert solutions for managing and optimizing your surplus inventory efficiently.',
-    },
-    {
       icon: HiOutlineTruck,
       title: 'Logistics Support',
       description: 'End-to-end logistics management for seamless international trading operations.',
-    },
-    {
-      icon: HiOutlineChartBar,
-      title: 'Market Analysis',
-      description: 'Data-driven insights to help you make informed decisions about your surplus inventory.',
-    },
-    {
-      icon: HiOutlineScale,
-      title: 'Quality Assurance',
-      description: 'Rigorous quality control processes to ensure product integrity and customer satisfaction.',
     },
     {
       icon: HiOutlineCurrencyDollar,
@@ -45,14 +30,14 @@ const Services = () => {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: 0.2,
       },
     },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
   return (
@@ -88,18 +73,22 @@ const Services = () => {
             <motion.div
               key={index}
               variants={itemVariants}
-              className="relative group"
+              whileHover={{ scale: 1.03 }}
+              transition={{ duration: 0.3 }}
+              className="relative group h-full"
             >
-              <div className="h-full bg-white rounded-lg shadow-sm p-8 border border-gray-100 hover:shadow-lg transition-shadow duration-300">
-                <div className="text-blue-600 mb-5">
+              <div className="h-full bg-white rounded-lg shadow-sm p-8 border border-gray-100 group-hover:shadow-lg transition-shadow duration-300 flex flex-col">
+                <div className="text-[#C82D4D] mb-5 flex-shrink-0">
                   <service.icon className="h-8 w-8" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                  {service.title}
-                </h3>
-                <p className="text-gray-500">
-                  {service.description}
-                </p>
+                <div className="flex-grow">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">
+                    {service.title}
+                  </h3>
+                  <p className="text-gray-500">
+                    {service.description}
+                  </p>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -111,12 +100,14 @@ const Services = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="mt-16 text-center"
         >
-          <a
+          <motion.a
             href="#contact"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#C82D4D] hover:bg-[#A8243D] transition-colors duration-300"
           >
             Get Started
-          </a>
+          </motion.a>
         </motion.div>
       </div>
     </section>

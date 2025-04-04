@@ -1,136 +1,151 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { HiLightBulb, HiGlobe, HiCube, HiUsers } from 'react-icons/hi';
+import { FaQuoteLeft } from 'react-icons/fa';
 
 const About = () => {
-  const [ref, inView] = useInView({
+  // Ref for the main About text section
+  const [aboutRef, aboutInView] = useInView({
     triggerOnce: true,
-    threshold: 0.1,
+    threshold: 0.2, // Adjusted threshold
   });
 
-  const values = [
+  // Ref for the Reviews section
+  const [reviewsRef, reviewsInView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1, // Lower threshold for reviews grid
+  });
+
+  // Variants for the overall section container (can be reused)
+  const sectionVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.5 } },
+  };
+
+  // Variants for staggered items (like review cards)
+  const listContainerVariants = {
+    hidden: { },
+    visible: {
+      transition: {
+        staggerChildren: 0.3, // Slightly increased stagger
+      },
+    },
+  };
+
+  // Variants for individual items sliding in
+  const itemSlideInVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  // Variant for the quote icon inside the card
+  const quoteIconVariants = {
+    hidden: { scale: 0.5, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        delay: 0.2, // Delay slightly after card starts appearing
+        duration: 0.4,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const reviews = [
     {
-      icon: HiLightBulb,
-      title: 'Innovation',
-      description: 'Pioneering solutions in surplus inventory management with cutting-edge approaches.',
+      text: "ASD sourced toys for us below the standard market price. Throughout the whole process, ASD was extremely clear, transparent, and kept us posted on every step. Whether you're looking to buy or sell, I highly recommend working with ASD Tradings.",
+      author: "C.S",
+      company: "COS Supplies",
     },
     {
-      icon: HiGlobe,
-      title: 'Global Reach',
-      description: 'Connected network spanning continents, bringing opportunities worldwide.',
+      text: "ASD Tradings is an honest and reliable company. I highly recommend them to anyone looking to work with a transparent and trustworthy partner.",
+      author: "E.G",
+      company: "Hod Vehodor Judaica",
     },
     {
-      icon: HiCube,
-      title: 'Efficiency',
-      description: 'Streamlined processes that maximize value and minimize waste.',
-    },
-    {
-      icon: HiUsers,
-      title: 'Partnership',
-      description: 'Building lasting relationships with clients through trust and reliability.',
+      text: "ASD Tradings was super helpful in helping us clear our unwanted stock. Communicative, efficient, and reliable.",
+      author: "G.S",
+      company: "The Rolling Pin",
     },
   ];
 
   return (
-    <section id="about" className="py-24 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center"
+    <section id="about" className="py-24 lg:py-32 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
+      {/* Use sectionVariants for the overall section fade-in */}
+      <motion.div
+        // No ref needed here if we trigger children based on their own refs/viewport
+        variants={sectionVariants}
+        initial="hidden"
+        animate="visible" // Animate immediately on load/mount
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
+        {/* About Text Block - uses its own ref and variant */}
+        <motion.div 
+          ref={aboutRef}
+          variants={itemSlideInVariants} 
+          initial="hidden"
+          animate={aboutInView ? "visible" : "hidden"}
+          className="max-w-3xl mx-auto text-center mb-16 lg:mb-20"
+        >
+          <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
+            About <span className="text-[#C82D4D]">ASD Tradings</span>
+          </h2>
+          <p className="mt-6 text-lg text-gray-600 leading-relaxed">
+            Founded in 2023, ASD Tradings was established to assist businesses struggling with overstock, freeing up valuable warehouse space and improving cash flow. As global traders and distributors of surplus, excess, and liquidation inventory, we operate as a service that connects buyers and sellers, primarily in the UK and USA, but with a global reach across all product categories. Our extensive network allows us to create valuable opportunities, ensuring surplus stock reaches the right buyers while benefiting both parties.
+          </p>
+        </motion.div>
+
+        {/* Reviews Section Container - uses reviewsRef and listContainerVariants */}
+        <motion.div 
+          ref={reviewsRef} 
+          variants={listContainerVariants} // Use list variants for staggering
+          initial="hidden"
+          animate={reviewsInView ? "visible" : "hidden"}
+        >
+          {/* Reviews Heading - animates with the reviews section */}
+          <motion.h3 
+            variants={itemSlideInVariants} // Reuse slide-in for heading
+            className="text-2xl font-bold text-gray-900 text-center mb-10 sm:text-3xl"
           >
-            <div className="relative">
-              <h3 className="text-2xl font-extrabold text-gray-900 tracking-tight sm:text-3xl">
-                About ASD Tradings
-              </h3>
-              <p className="mt-3 text-lg text-gray-500">
-                ASD Tradings is a leading global surplus inventory solutions provider, 
-                dedicated to creating value through efficient distribution and strategic 
-                asset management. Our expertise lies in connecting businesses worldwide 
-                with premium surplus inventory opportunities.
-              </p>
-
-              <dl className="mt-10 space-y-10">
-                {values.map((value, index) => (
-                  <div key={index} className="relative">
-                    <dt>
-                      <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
-                        <value.icon className="h-6 w-6" aria-hidden="true" />
-                      </div>
-                      <p className="ml-16 text-lg leading-6 font-medium text-gray-900">{value.title}</p>
-                    </dt>
-                    <dd className="mt-2 ml-16 text-base text-gray-500">{value.description}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-
-            <div className="mt-10 -mx-4 relative lg:mt-0" aria-hidden="true">
+            What Our Partners Say
+          </motion.h3>
+          
+          {/* Reviews Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {reviews.map((review, index) => (
               <motion.div
-                ref={ref}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={inView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.8 }}
-                className="relative space-y-6"
+                key={index}
+                variants={itemSlideInVariants} // Each card uses slide-in
+                whileHover={{ 
+                  scale: 1.02, 
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' 
+                }} // Hover effect
+                transition={{ duration: 0.3 }} // Transition for hover
+                className="bg-white p-6 rounded-lg shadow-md border border-gray-200 flex flex-col h-full" // Added h-full
               >
-                {/* Stats Grid */}
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-6 text-white">
-                    <div className="text-4xl font-bold">15+</div>
-                    <div className="text-sm mt-2">Years of Experience</div>
-                  </div>
-                  <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-6 text-white">
-                    <div className="text-4xl font-bold">50+</div>
-                    <div className="text-sm mt-2">Global Partners</div>
-                  </div>
-                  <div className="bg-gradient-to-br from-blue-700 to-blue-800 rounded-lg p-6 text-white">
-                    <div className="text-4xl font-bold">25+</div>
-                    <div className="text-sm mt-2">Countries Served</div>
-                  </div>
-                  <div className="bg-gradient-to-br from-blue-800 to-blue-900 rounded-lg p-6 text-white">
-                    <div className="text-4xl font-bold">1000+</div>
-                    <div className="text-sm mt-2">Successful Deals</div>
-                  </div>
-                </div>
+                {/* Animate Quote Icon */}
+                <motion.div variants={quoteIconVariants}>
+                  <FaQuoteLeft className="text-3xl text-[#C82D4D] opacity-30 mb-4" aria-hidden="true" />
+                </motion.div>
+                <blockquote className="flex-grow">
+                  <p className="text-gray-700 italic mb-4">"{review.text}"</p>
+                </blockquote>
+                <footer className="mt-auto pt-4 border-t border-gray-100">
+                  <p className="text-sm font-semibold text-gray-800">- {review.author}</p>
+                  <p className="text-xs text-gray-500">{review.company}</p>
+                </footer>
               </motion.div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-24"
-          >
-            <div className="lg:mx-auto lg:max-w-7xl lg:px-8 lg:grid lg:grid-cols-2 lg:gap-24 lg:items-start">
-              <div className="relative sm:py-16 lg:py-0">
-                <div className="relative mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:px-0 lg:max-w-none lg:py-20">
-                  {/* Testimonial Card */}
-                  <div className="relative pt-64 pb-10 rounded-2xl shadow-xl overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-blue-600 via-blue-600 opacity-90" />
-                    <div className="relative px-8">
-                      <blockquote className="mt-8">
-                        <div className="relative text-lg font-medium text-white md:flex-grow">
-                          <p className="relative">
-                            "ASD Tradings has revolutionized how we manage our surplus inventory. 
-                            Their global network and efficient processes have helped us maximize 
-                            value while minimizing waste."
-                          </p>
-                        </div>
-                        <footer className="mt-4">
-                          <p className="text-base font-semibold text-blue-200">CEO of a Fortune 500 Company</p>
-                        </footer>
-                      </blockquote>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 };

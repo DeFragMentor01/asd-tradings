@@ -1,5 +1,5 @@
 import { Link } from 'react-scroll';
-import { FaLinkedin, FaTwitter, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaLinkedin } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
 const Footer = () => {
@@ -7,29 +7,13 @@ const Footer = () => {
     main: [
       { name: 'About', to: 'about' },
       { name: 'Services', to: 'services' },
-      { name: 'Portfolio', to: 'portfolio' },
       { name: 'Contact', to: 'contact' },
     ],
     social: [
       {
         name: 'LinkedIn',
-        href: '#',
+        href: 'https://www.linkedin.com/company/asd-tradings/?viewAsMember=true',
         icon: FaLinkedin,
-      },
-      {
-        name: 'Twitter',
-        href: '#',
-        icon: FaTwitter,
-      },
-      {
-        name: 'Facebook',
-        href: '#',
-        icon: FaFacebook,
-      },
-      {
-        name: 'Instagram',
-        href: '#',
-        icon: FaInstagram,
       },
     ],
   };
@@ -72,10 +56,9 @@ const Footer = () => {
           <div className="col-span-1">
             <h3 className="text-white text-lg font-bold mb-4">Contact Us</h3>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li>Los Angeles, CA</li>
-              <li>Phone: +1 (555) 123-4567</li>
-              <li>Email: contact@asdtradings.com</li>
-              <li>Hours: Mon-Fri 9am to 6pm PST</li>
+              <li>Phone UK: +44 333 613 6700</li>
+              <li>Phone USA: +1 845-202-9691</li>
+              <li>Email: info@asdtradings.com</li>
             </ul>
           </div>
         </div>

@@ -6,28 +6,26 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 import Services from './components/Services';
-import Portfolio from './components/Portfolio';
 
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
         <Routes>
-          <Route path="/" element={<Maintenance />} />
           <Route 
-            path="/613613" 
+            path="/"
             element={
               <>
                 <Navbar />
                 <Hero />
                 <About />
                 <Services />
-                <Portfolio />
                 <Contact />
                 <Footer />
               </>
             } 
           />
+          <Route path="/613613" element={<Maintenance />} />
         </Routes>
       </div>
     </BrowserRouter>

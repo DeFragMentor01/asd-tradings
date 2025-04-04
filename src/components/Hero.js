@@ -1,145 +1,150 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-scroll';
 import { HiArrowRight } from 'react-icons/hi';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
+
+// Helper function to generate random number in a range
+const random = (min, max) => Math.random() * (max - min) + min;
 
 const Hero = () => {
-  const [currentPath, setCurrentPath] = useState(0);
+  const numNodes = 30; // Number of nodes
+  const connectionThreshold = 250; // Max distance for lines
+  const nodeRadius = 4;
 
-  // Define more interesting paths across the globe
-  const paths = [
-    "M 100,300 C 400,100 600,900 900,300",
-    "M 900,400 C 600,200 400,800 100,500",
-    "M 200,100 C 500,600 700,200 800,700",
-    "M 100,600 C 400,200 600,800 900,400"
-  ];
+  // Generate node positions using useMemo to prevent regeneration on every render
+  const nodes = useMemo(() => 
+    Array.from({ length: numNodes }).map(() => ({
+      x: random(50, 950),
+      y: random(50, 950),
+      // Add random animation properties per node
+      duration: random(2, 5),
+      delay: random(0, 2),
+    })),
+   [numNodes] // Dependency array ensures regeneration only if numNodes changes
+  );
 
-  // Change path every 4 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentPath((prev) => (prev + 1) % paths.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [paths.length]);
+  // Generate lines between nearby nodes using useMemo
+  const lines = useMemo(() => {
+    const linesArray = [];
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < connectionThreshold) {
+          linesArray.push({
+            x1: nodes[i].x,
+            y1: nodes[i].y,
+            x2: nodes[j].x,
+            y2: nodes[j].y,
+            duration: random(3, 6),
+            delay: random(0, 3),
+          });
+        }
+      }
+    }
+    return linesArray;
+  }, [nodes, connectionThreshold]);
+
+  // --- Parallax Setup --- 
+  const { scrollYProgress } = useScroll();
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]); // Background moves 30% slower
 
   return (
     <div id="hero" className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background with overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-[#2B2D61] to-[#1B1D51]">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-      </div>
+      {/* Background Gradient - Apply Parallax */}
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-br from-gray-800 via-[#2B2D61] to-[#1B1D51]"
+        style={{ y: backgroundY }} // Apply transformed y
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+      </motion.div>
 
-      {/* Animated Background */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Animated Background - Apply Parallax */}
+      <motion.div 
+        className="absolute inset-0 pointer-events-none overflow-hidden"
+        style={{ y: backgroundY }} // Apply transformed y
+      >
         <motion.svg
           viewBox="0 0 1000 1000"
-          className="w-full h-full opacity-60"
+          preserveAspectRatio="xMidYMid slice" // Ensures SVG covers the area
+          className="w-full h-full opacity-40" // Reduced opacity
         >
-          {/* Globe Circle */}
-          <motion.circle
-            cx="500"
-            cy="500"
-            r="400"
-            stroke="white"
-            strokeWidth="2"
-            fill="none"
-            opacity="0.2"
-          />
-
-          {/* Trailing Path */}
-          <motion.path
-            key={`trail-${currentPath}`}
-            d={paths[currentPath]}
-            stroke="white"
-            strokeWidth="4"
-            strokeDasharray="15,20"
-            fill="none"
-            initial={{ pathLength: 0, opacity: 0.3 }}
-            animate={{ pathLength: 1, opacity: 0.6 }}
-            transition={{
-              duration: 4,
-              ease: "linear"
-            }}
-          />
-
-          {/* Moving Package */}
-          <motion.g
-            key={`package-${currentPath}`}
-            initial={{ offsetDistance: "0%" }}
-            animate={{ offsetDistance: "100%" }}
-            transition={{
-              duration: 4,
-              ease: "linear"
-            }}
-            style={{
-              offsetPath: `path('${paths[currentPath]}')`
-            }}
-          >
-            {/* Package with glow effect */}
-            <motion.g
-              initial={{ scale: 0 }}
-              animate={{ scale: 1, rotate: 360 }}
-              transition={{ duration: 0.5 }}
-            >
-              {/* Glow effect */}
-              <circle
-                r="40"
-                fill="url(#glow)"
-                opacity="0.6"
-              />
-              {/* Package box */}
-              <rect
-                width="50"
-                height="50"
-                fill="#C82D4D"
-                x="-25"
-                y="-25"
-                rx="8"
-              />
-              {/* Package details */}
-              <path
-                d="M -12,-12 L 12,-12 L 12,12 L -12,12 Z M -12,-4 L 12,-4 M 0,-12 L 0,12"
-                stroke="white"
-                strokeWidth="3"
-                fill="none"
-              />
-            </motion.g>
-          </motion.g>
-
-          {/* Gradient definition for glow effect */}
+          {/* Gradient for Line Glow */}
           <defs>
-            <radialGradient id="glow">
-              <stop offset="0%" stopColor="#C82D4D" stopOpacity="0.5" />
+            <radialGradient id="lineGlow">
+              <stop offset="0%" stopColor="#C82D4D" stopOpacity="0.6" />
               <stop offset="100%" stopColor="#C82D4D" stopOpacity="0" />
             </radialGradient>
           </defs>
 
-          {/* Globe Details - Latitude/Longitude lines */}
-          {[0, 1, 2].map((i) => (
-            <motion.path
-              key={`lat-${i}`}
-              d={`M 100,${300 + i * 150} Q 500,${400 + i * 100} 900,${300 + i * 150}`}
-              stroke="white"
+          {/* Render Lines */}
+          {lines.map((line, index) => (
+            <motion.line
+              key={`line-${index}`}
+              x1={line.x1}
+              y1={line.y1}
+              x2={line.x2}
+              y2={line.y2}
+              stroke="#FFFFFF" // Base line color
               strokeWidth="1"
-              fill="none"
-              opacity="0.1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.3, 0] }} // Fade in and out
+              transition={{
+                duration: line.duration,
+                delay: line.delay,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
             />
           ))}
-          {[0, 1, 2].map((i) => (
-            <motion.path
-              key={`long-${i}`}
-              d={`M ${300 + i * 150},100 Q ${400 + i * 100},500 ${300 + i * 150},900`}
-              stroke="white"
-              strokeWidth="1"
-              fill="none"
-              opacity="0.1"
+          
+          {/* Render Glowing Lines on top */}
+          {lines.map((line, index) => (
+             <motion.line
+              key={`glow-line-${index}`}
+              x1={line.x1}
+              y1={line.y1}
+              x2={line.x2}
+              y2={line.y2}
+              stroke="url(#lineGlow)" // Use gradient for glow
+              strokeWidth="15" // Wider stroke for glow effect
+              strokeLinecap="round"
+              initial={{ pathLength: 0, opacity: 0}}
+              animate={{ pathLength: [0, 1, 0], opacity: [0, 0.6, 0] }} // Animate drawing and fade
+              transition={{
+                duration: line.duration * 0.8, // Slightly faster than base line
+                delay: line.delay,
+                repeat: Infinity,
+                repeatDelay: 1 // Add delay between repeats
+              }}
+            />
+          ))}
+
+          {/* Render Nodes */}
+          {nodes.map((node, index) => (
+            <motion.circle
+              key={`node-${index}`}
+              cx={node.x}
+              cy={node.y}
+              r={nodeRadius}
+              fill="#FFFFFF" // Node color
+              initial={{ opacity: 0.1 }}
+              animate={{ opacity: [0.1, 0.5, 0.1] }} // Pulsing opacity
+              transition={{
+                duration: node.duration,
+                delay: node.delay,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
             />
           ))}
         </motion.svg>
-      </div>
+      </motion.div>
 
       {/* Content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 z-10">
+        {/* Added z-10 to ensure content is above background */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -164,7 +169,7 @@ const Hero = () => {
               smooth={true}
               offset={-70}
               duration={500}
-              className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#C82D4D] hover:bg-[#C82D4D]/90 transition-colors duration-300"
+              className="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#C82D4D] hover:bg-[#A8243D] transition-colors duration-300"
             >
               Our Services
               <HiArrowRight className="ml-2 h-5 w-5" />
@@ -181,26 +186,6 @@ const Hero = () => {
               Contact Us
             </Link>
           </div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="mt-16 grid grid-cols-2 gap-8 sm:grid-cols-4"
-          >
-            {[
-              { label: 'Global Partners', value: '50+' },
-              { label: 'Countries Served', value: '25+' },
-              { label: 'Years Experience', value: '15+' },
-              { label: 'Successful Deals', value: '1000+' },
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
-                <p className="text-3xl font-bold text-white">{stat.value}</p>
-                <p className="text-sm text-gray-300">{stat.label}</p>
-              </div>
-            ))}
-          </motion.div>
         </motion.div>
       </div>
 
@@ -214,7 +199,7 @@ const Hero = () => {
           repeat: Infinity,
           repeatType: "reverse",
         }}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10"
       >
         <div className="w-6 h-10 border-2 border-white rounded-full p-1">
           <div className="w-1.5 h-3 bg-white rounded-full mx-auto" />
